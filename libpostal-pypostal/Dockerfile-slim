@@ -1,0 +1,31 @@
+FROM python:3.10-slim AS build
+
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    autoconf \
+    automake \
+    libtool \
+    build-essential \
+    pkg-config
+
+RUN mkdir -p /libpostal-data \
+    && git clone https://github.com/openvenues/libpostal.git /opt/libpostal \
+    && cd /opt/libpostal \
+    && ./bootstrap.sh \
+    && ./configure --prefix=/usr --datadir=/libpostal-data --disable-sse2 \
+    && make \
+    && make install \
+    && ldconfig
+
+RUN pip install --no-cache-dir postal
+
+# Final image
+FROM python:3.10-slim
+
+COPY --from=build /libpostal-data /libpostal-data
+COPY --from=build /usr/lib/libpostal* /usr/lib/
+COPY --from=build /usr/include/libpostal /usr/include/libpostal
+
+COPY --from=build /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
+

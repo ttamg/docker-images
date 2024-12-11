@@ -2,6 +2,6 @@
 
 Langfuse backend and client Docker image
 
-## Dockerhub
+## Dockerhub image
 
-This image is available on Dockerhub - https://hub.docker.com/repository/docker/ttamg76/langfuse/general
+https://hub.docker.com/repository/docker/ttamg76/langfuse/general

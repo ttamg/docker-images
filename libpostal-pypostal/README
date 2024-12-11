@@ -1,0 +1,7 @@
+# libpostal-pypostal
+
+Multistage build for a Python setup for libpostal and pypostal installation. Otherwise it can be a pain to install.
+
+## Dockerhub
+
+https://hub.docker.com/r/ttamg76/libpostal-pypostal/tags
