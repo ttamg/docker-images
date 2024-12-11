@@ -1,0 +1,7 @@
+# spacy
+
+A Python build that includes spacy and dependencies.
+
+## Dockerhub
+
+https://hub.docker.com/repository/docker/ttamg76/spacy/general
