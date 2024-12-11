@@ -1,0 +1,32 @@
+FROM python:3.10-alpine AS build
+
+RUN apk update && apk add --no-cache \
+    build-base \ 
+    python3-dev \ 
+    openblas-dev \
+    git \
+    curl \
+    autoconf \
+    automake \
+    libtool 
+
+RUN mkdir -p /libpostal-data \
+    && git clone https://github.com/openvenues/libpostal.git /opt/libpostal \
+    && cd /opt/libpostal \
+    && ./bootstrap.sh \
+    && ./configure --prefix=/usr --datadir=/libpostal-data --disable-sse2 \
+    && make \
+    && make install \
+    && ldconfig
+
+RUN pip install --no-cache-dir postal
+
+# Final image
+FROM python:3.10-alpine
+
+COPY --from=build /libpostal-data /libpostal-data
+COPY --from=build /usr/lib/libpostal* /usr/lib/
+COPY --from=build /usr/include/libpostal /usr/include/libpostal
+
+COPY --from=build /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
+
